@@ -1,0 +1,271 @@
+﻿<Window x:Class="_2048.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_2048"
+        mc:Ignorable="d"
+        Title="2048" Height="900" Width="800"
+        Background="PeachPuff">
+    <Window.Resources>
+        <Style TargetType="Border" x:Key="BackgroundStyle">
+            <Setter Property="Background" Value="#FF9A8263"/>
+            <Setter Property="Margin" Value="20"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Style.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="30"/>
+                    <Setter Property="FontFamily" Value="CalibriBold"/>
+                    <Setter Property="Foreground" Value="Moccasin"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                </Style>
+            </Style.Resources>
+        </Style>
+
+
+        <!--Стиль для плитки-->
+        <Style TargetType="Border" x:Key="TileStyle">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Background" Value="LightGray"/>
+
+            <!-- Важно! Устанавливаем привязку к дочернему элементу -->
+            <Setter Property="Tag">
+                <Setter.Value>
+                    <Binding Path="Child.Text" RelativeSource="{RelativeSource Self}"/>
+                </Setter.Value>
+            </Setter>
+
+            <!-- Триггеры для Border -->
+            <Style.Triggers>
+                <Trigger Property="Tag" Value="0">
+                    <Setter Property="Background" Value="PeachPuff"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="2">
+                    <Setter Property="Background" Value="PapayaWhip"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="4">
+                    <Setter Property="Background" Value="LightGoldenrodYellow"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="8">
+                    <Setter Property="Background" Value="Tan"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="16">
+                    <Setter Property="Background" Value="Moccasin"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="32">
+                    <Setter Property="Background" Value="SandyBrown"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="64">
+                    <Setter Property="Background" Value="LightSalmon"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="128">
+                    <Setter Property="Background" Value="Salmon"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="256">
+                    <Setter Property="Background" Value="LightCoral"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="512">
+                    <Setter Property="Background" Value="Orange"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="1024">
+                    <Setter Property="Background" Value="Blue"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="2048">
+                    <Setter Property="Background" Value="Red"/>
+                </Trigger>
+            </Style.Triggers>
+            
+            
+
+            <Style.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="50"/>
+                    <Setter Property="FontFamily" Value="Arial Black"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+
+                    <!-- Триггер для TextBlock -->
+                    <Style.Triggers>
+                        <Trigger Property="Text" Value="0">
+                            <Setter Property="Foreground" Value="PeachPuff"/>
+                        </Trigger>
+                        <Trigger Property="Text" Value="2">
+                            <Setter Property="Foreground" Value="SaddleBrown"/>
+                        </Trigger>
+                        <Trigger Property="Text" Value="4">
+                            <Setter Property="Foreground" Value="SaddleBrown"/>
+                        </Trigger>
+                        <Trigger Property="Text" Value="8">
+                            <Setter Property="Foreground" Value="Chocolate"/>
+                        </Trigger>
+                        <Trigger Property="Text" Value="16">
+                            <Setter Property="Foreground" Value="Sienna"/>
+                        </Trigger>
+                        <Trigger Property="Text" Value="32">
+                            <Setter Property="Foreground" Value="Moccasin"/>
+                        </Trigger>
+                        <Trigger Property="Text" Value="64">
+                            <Setter Property="Foreground" Value="Honeydew"/>
+                        </Trigger>
+                        <Trigger Property="Text" Value="128">
+                            <Setter Property="Foreground" Value="Wheat"/>
+                        </Trigger>
+                        <Trigger Property="Text" Value="256">
+                            <Setter Property="Foreground" Value="MistyRose"/>
+                        </Trigger>
+                        <Trigger Property="Text" Value="512">
+                            <Setter Property="Foreground" Value="Black"/>
+                        </Trigger>
+                        <Trigger Property="Text" Value="1024">
+                            <Setter Property="Foreground" Value="LightCyan"/>
+                        </Trigger>
+                        <Trigger Property="Text" Value="2048">
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Style.Resources>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid Margin="25"
+          KeyDown="Window_KeyDown">
+        <Grid.RowDefinitions>
+            <RowDefinition Height = "*"/>
+            <RowDefinition Height= "4*"/>
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="Scores"
+              Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Border x:Name="Score"
+                    Grid.Column="0"
+                    Style="{StaticResource BackgroundStyle}">
+                <StackPanel VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+
+                    <TextBlock Text ="Score:"/>
+                    <TextBlock Text="0" Foreground="White"/>
+                </StackPanel>
+            </Border>
+
+            <Border x:Name="HightScore"
+                    Grid.Column="1"
+                    Style="{StaticResource BackgroundStyle}">
+                <StackPanel VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                    <TextBlock Text ="Hight Score:"/>
+                    <TextBlock Text="0" Foreground="White"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Border
+                Grid.Row="1"
+            Style="{StaticResource BackgroundStyle}">
+            <Grid x:Name="Map">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Column="0"
+                        Grid.Row="0"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="1"
+                        Grid.Row="0"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="2"
+                        Grid.Row="0"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="3"
+                        Grid.Row="0"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="0"
+                        Grid.Row="1"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="1"
+                        Grid.Row="1"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="2"
+                        Grid.Row="1"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="3"
+                        Grid.Row="1"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="0"
+                        Grid.Row="2"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="1"
+                        Grid.Row="2"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="2"
+                        Grid.Row="2"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="3"
+                        Grid.Row="2"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="0"
+                        Grid.Row="3"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="1"
+                        Grid.Row="3"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="2"
+                        Grid.Row="3"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+                <Border Grid.Column="3"
+                        Grid.Row="3"
+                        Style="{StaticResource TileStyle}">
+                    <TextBlock Text="0"/>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
